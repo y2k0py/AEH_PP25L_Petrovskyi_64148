@@ -1,32 +1,24 @@
-import java.util.Scanner;
-
 public class mojaDrugaAplikacja {
     public static void main(String[] args) {
-        double x = 10; // utworzenie zmiennej typu double i przypisanie jej wartości 10
-        double y = 2;
+        // Task 1
+        int x = 10;
+        System.out.println("x = " + x);
+        System.out.println("2 * x = " + x * 2);
+        System.out.println("x^2 = " + x * x);
 
-        Scanner scanner = new Scanner(System.in);
+        //Task 2
+        java.util.Scanner scanner = new java.util.Scanner(System.in);
 
-        var result = x + y;
-        System.out.println("x + y = " + result);
+        System.out.print("Enter your age: ");
+        int ageInYears = scanner.nextInt();
 
-        result = x - y;
-        System.out.println("x - y = " + result);
+        long ageInSeconds = (long) ageInYears * 365 * 24 * 60 * 60;
 
-        result = x * y;
-        System.out.println("x * y = " + result);
+        System.out.println("Your age in seconds: " + ageInSeconds);
 
-        result = x / y;
-        System.out.println("x / y = " + result);
+        scanner.close();
 
-        result = x % y;
-        System.out.println("x % y = " + result);
 
-        System.out.println("Wpisz dwie liczby rozdzielone klawiszem Enter:");
-        double first = scanner.nextDouble(); // próba o wpisanie wartości typu double
-        double second = scanner.nextDouble();
-
-        System.out.println("x + y = " + (first + second));
 
     }
 }
