@@ -19,6 +19,5 @@ public class mojaDrugaAplikacja {
         scanner.close();
 
 
-
     }
 }
