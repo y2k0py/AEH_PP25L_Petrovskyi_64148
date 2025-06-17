@@ -1,67 +1,103 @@
 package myapp;
 
-import java.io.*;
-import java.nio.file.*;
-import java.util.*;
+interface TypPaliwa {
+    String getTypPaliwa();
+}
 
-public class mojaTrzynastaAplikacja {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+abstract class Pojazd {
+    String nrRejestracyjny;
+    String numerVin;
+    String kolor;
+    double cena;
+    double spalanie;
+    double poziomPaliwa;
+    double przebieg;
 
-        Path inputPath;
-        while (true) {
-            System.out.print("Podaj pełną ścieżkę do pliku wejściowego: ");
-            String inputFilePath = scanner.nextLine();
-            inputPath = Paths.get(inputFilePath);
-            if (Files.exists(inputPath)) {
-                break;
-            } else {
-                System.out.println("Plik nie istnieje. Spróbuj ponownie.");
-            }
-        }
+    public Pojazd(String nrRejestracyjny, String numerVin, String kolor, double cena, double spalanie, double poziomPaliwa, double przebieg) {
+        this.nrRejestracyjny = nrRejestracyjny;
+        this.numerVin = numerVin;
+        this.kolor = kolor;
+        this.cena = cena;
+        this.spalanie = spalanie;
+        this.poziomPaliwa = poziomPaliwa;
+        this.przebieg = przebieg;
+    }
 
-        System.out.print("Podaj ścieżkę do pliku wyjściowego: ");
-        String outputFilePath = scanner.nextLine();
-        Path outputPath = Paths.get(outputFilePath);
-
-        Map<String, Integer> wordCounts = new HashMap<>();
-        int totalWords = 0;
-
-        try (BufferedReader reader = Files.newBufferedReader(inputPath)) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] words = line.toLowerCase().replaceAll("[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+", " ").split("\\s+");
-                for (String word : words) {
-                    if (!word.isEmpty()) {
-                        totalWords++;
-                        wordCounts.put(word, wordCounts.getOrDefault(word, 0) + 1);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Błąd podczas czytania pliku: " + e.getMessage());
+    public void prowadz(double km) {
+        if (poziomPaliwa <= 0) {
+            System.out.println("Brak paliwa!");
             return;
         }
-
-        System.out.println("Liczba słów: " + totalWords);
-        System.out.println("Wystąpienia poszczególnych słów:");
-        for (Map.Entry<String, Integer> entry : wordCounts.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
+        double zuzycie = (spalanie / 100.0) * km;
+        if (zuzycie > poziomPaliwa) {
+            System.out.println("Za mało paliwa na przejazd " + km + " km.");
+        } else {
+            poziomPaliwa -= zuzycie;
+            przebieg += km;
+            System.out.println("Pojazd przejechał " + km + " km. Pozostało paliwa: " + poziomPaliwa);
         }
+    }
 
-        try (BufferedWriter writer = Files.newBufferedWriter(outputPath)) {
-            writer.write("Plik: " + inputPath.getFileName());
-            writer.newLine();
-            writer.write("Liczba wszystkich słów: " + totalWords);
-            writer.newLine();
-            writer.write("Wystąpienia poszczególnych słów:");
-            writer.newLine();
-            for (Map.Entry<String, Integer> entry : wordCounts.entrySet()) {
-                writer.write(entry.getKey() + ": " + entry.getValue());
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            System.out.println("Błąd podczas zapisu do pliku: " + e.getMessage());
-        }
+    public void zatankuj(double litry) {
+        poziomPaliwa += litry;
+        System.out.println("Zatankowano " + litry + "L. Nowy poziom: " + poziomPaliwa);
+    }
+}
+
+class Diesel implements TypPaliwa {
+    public String getTypPaliwa() {
+        return "Diesel";
+    }
+}
+
+class Benzyna implements TypPaliwa {
+    public String getTypPaliwa() {
+        return "Benzyna";
+    }
+}
+
+class Elektryk implements TypPaliwa {
+    public String getTypPaliwa() {
+        return "Elektryczny";
+    }
+}
+
+class Osobowe extends Pojazd {
+    int liczbaDrzwi;
+
+    public Osobowe(String nrRejestracyjny, String numerVin, String kolor, double cena, double spalanie,
+                   double poziomPaliwa, double przebieg, int liczbaDrzwi) {
+        super(nrRejestracyjny, numerVin, kolor, cena, spalanie, poziomPaliwa, przebieg);
+        this.liczbaDrzwi = liczbaDrzwi;
+    }
+}
+
+class Ciezarowka extends Pojazd {
+    double ladownosc;
+
+    public Ciezarowka(String nrRejestracyjny, String numerVin, String kolor, double cena, double spalanie,
+                      double poziomPaliwa, double przebieg, double ladownosc) {
+        super(nrRejestracyjny, numerVin, kolor, cena, spalanie, poziomPaliwa, przebieg);
+        this.ladownosc = ladownosc;
+    }
+}
+
+class Motocykl extends Pojazd {
+    boolean posiadaDostawke;
+
+    public Motocykl(String nrRejestracyjny, String numerVin, String kolor, double cena, double spalanie,
+                    double poziomPaliwa, double przebieg, boolean posiadaDostawke) {
+        super(nrRejestracyjny, numerVin, kolor, cena, spalanie, poziomPaliwa, przebieg);
+        this.posiadaDostawke = posiadaDostawke;
+    }
+}
+
+class SprzetBudowlany extends Pojazd {
+    int przepracowaneGodziny;
+
+    public SprzetBudowlany(String nrRejestracyjny, String numerVin, String kolor, double cena, double spalanie,
+                           double poziomPaliwa, double przebieg, int przepracowaneGodziny) {
+        super(nrRejestracyjny, numerVin, kolor, cena, spalanie, poziomPaliwa, przebieg);
+        this.przepracowaneGodziny = przepracowaneGodziny;
     }
 }
